@@ -47,7 +47,6 @@ router.post("/", async (req, res) => {
   //   "category_name": "Jeans"
   // }
   try {
-    // const newCategory = await User.create(req.body);
     const newCategory = await Category.create(req.body);
     res.status(200).json(newCategory);
   } catch (err) {

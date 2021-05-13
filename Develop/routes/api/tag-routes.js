@@ -59,32 +59,20 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   // create a new tag
   /* req.body should look like this...
     {
-      tag_name: "House Music",
+      "tag_id": 11,
+      "tag_name": "House Music"
     }
   */
-  Tag.create(req.body)
-    .then((tag) => {
-      if (req.body.tag_name.length) {
-        const newTag = req.body.tag_name.map((tag_name) => {
-          return {
-            tag_name: tag.id,
-            tag_name,
-          };
-        });
-        return ProductTag.bulkCreate(newTag);
-      }
-      // if no product tags, just respond
-      res.status(200).json(tag);
-    })
-    .then((newTag) => res.status(200).json(newTag))
-    .catch((err) => {
-      console.log(err);
-      res.status(400).json(err);
-    });
+  try {
+    const newTag = await Tag.create(req.body);
+    res.status(200).json(newTag);
+  } catch (err) {
+    res.status(400).json(err);
+  }
 });
 
 router.put("/:id", (req, res) => {
