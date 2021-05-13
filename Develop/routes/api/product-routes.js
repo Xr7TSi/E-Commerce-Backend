@@ -74,7 +74,7 @@ router.put("/:id", (req, res) => {
       "category_id": [1]
     }
   */
-  Product.update(req.body, {
+  Product.update( {
     product_name: req.body.product_name,
     price: req.body.price,
     stock: req.body.stock,
@@ -82,7 +82,7 @@ router.put("/:id", (req, res) => {
   },
   {
     where: {
-      id: req.params.id,
+      product_id: req.params.id,
     },
   })
     .then((product) => {
