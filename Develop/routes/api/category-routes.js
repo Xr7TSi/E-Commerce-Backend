@@ -1,24 +1,28 @@
-const router = require('express').Router();
-const { Category, Product } = require('../../models');
+const router = require("express").Router();
+const { Category, Product } = require("../../models");
 
 // The `/api/categories` endpoint
 
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   // find all categories
   // be sure to include its associated Products
   const allCategories = await Category.findAll().catch((err) => {
-  res.json(err);
-});
-  res.json(allCategories)
+    res.json(err);
+  });
+  res.json(allCategories);
 });
 
-router.get('/:id', async (req, res) => {
+router.get("/:id", async (req, res) => {
   // find one category by its `id` value
   // be sure to include its associated Products
   try {
-    const selectedCategory = await User.findByPk(req.params.id);
+    const selectedCategory = await Category.findOne({
+      where: { category_id: req.params.id },
+      include: {model: Product, attributes: ['product_id', 'product_name', 'price', 'stock', 'category_id']
+      }
+    });
     if (!selectedCategory) {
-      res.status(404).json({ message: 'Category does not exist'});
+      res.status(404).json({ message: "Category does not exist" });
       return;
     }
     res.status(200).json(selectedCategory);
@@ -27,7 +31,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   // create a new category
   try {
     const newCategory = await User.create(req.body);
@@ -37,7 +41,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put("/:id", async (req, res) => {
   // update a category by its `id` value
   try {
     const updateCategory = await User.update(req.body, {
@@ -46,7 +50,7 @@ router.put('/:id', async (req, res) => {
       },
     });
     if (!updateCategory[0]) {
-      res.status(404).json({ message: 'Category not updated.' });
+      res.status(404).json({ message: "Category not updated." });
       return;
     }
     res.status(200).json(updateCategory);
@@ -55,7 +59,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete("/:id", async (req, res) => {
   // delete a category by its `id` value
   try {
     const categoryDelete = await User.destroy({
@@ -64,7 +68,7 @@ router.delete('/:id', async (req, res) => {
       },
     });
     if (!categoryDelete) {
-      res.status(404).json({ message: 'Category not deleted' });
+      res.status(404).json({ message: "Category not deleted" });
       return;
     }
     res.status(200).json(categoryDelete);
