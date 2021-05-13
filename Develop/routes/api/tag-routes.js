@@ -75,48 +75,45 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", async (req, res) => {
   // update a tag's name by its `id` value
-  Tag.update(req.body, {
-    where: {
-      id: req.params.id,
-    },
-  })
-    .then((product) => {
-      return Tag.findAll({ where: { tag_id: req.params.id } });
-    })
-    .then((currentTags) => {
-      // get list of current tag_ids
-      const productTagIds = currentTags.map(({ tag_id }) => tag_id);
-      // create filtered list of new tag_ids
-      const newProductTags = req.body.tagIds
-        .filter((tag_id) => !currentTagIds.includes(tag_id))
-        .map((tag_id) => {
-          return {
-            product_id: req.params.id,
-            tag_id,
-          };
-        });
-      // figure out which ones to remove
-      const productTagsToRemove = productTags
-        .filter(({ tag_id }) => !req.body.tagIds.includes(tag_id))
-        .map(({ id }) => id);
-
-      // run both actions
-      return Promise.all([
-        ProductTag.destroy({ where: { id: productTagsToRemove } }),
-        ProductTag.bulkCreate(newProductTags),
-      ]);
-    })
-    .then((updatedProductTags) => res.json(updatedProductTags))
-    .catch((err) => {
-      // console.log(err);
-      res.status(400).json(err);
+  // put should look like this:
+  // {
+  // "tag_id": 2,
+  // "tag_name": "Country_music"
+  // }
+  try {
+    const updateTag = await Tag.update(req.body, {
+      where: {
+        tag_id: req.params.id,
+      },
     });
+    if (!updateTag[0]) {
+      res.status(404).json({ message: "Tag not updated." });
+      return;
+    }
+    res.status(200).json(updateTag);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   // delete on tag by its `id` value
+  try {
+    const tagDelete = await Tag.destroy({
+      where: {
+        tag_id: req.params.id,
+      },
+    });
+    if (!tagDelete) {
+      res.status(404).json({ message: "Tag not deleted" });
+      return;
+    }
+    res.status(200).json(tagDelete);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 module.exports = router;
