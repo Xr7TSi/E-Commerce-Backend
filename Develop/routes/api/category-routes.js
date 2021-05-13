@@ -18,8 +18,16 @@ router.get("/:id", async (req, res) => {
   try {
     const selectedCategory = await Category.findOne({
       where: { category_id: req.params.id },
-      include: {model: Product, attributes: ['product_id', 'product_name', 'price', 'stock', 'category_id']
-      }
+      include: {
+        model: Product,
+        attributes: [
+          "product_id",
+          "product_name",
+          "price",
+          "stock",
+          "category_id",
+        ],
+      },
     });
     if (!selectedCategory) {
       res.status(404).json({ message: "Category does not exist" });
@@ -33,7 +41,7 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   // create a new category
-  // Post should look like this: 
+  // Post should look like this:
   // {
   //   "category_id": 6,
   //   "category_name": "Jeans"
@@ -49,7 +57,7 @@ router.post("/", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   // update a category by its `id` value
-    // Putt should look like this: 
+  // Putt should look like this:
   // {
   //   "category_id": 6,
   //   "category_name": "Mom_Jeans"

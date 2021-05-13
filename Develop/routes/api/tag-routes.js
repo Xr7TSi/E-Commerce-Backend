@@ -22,7 +22,13 @@ router.get("/", async (req, res) => {
   const tags = await Tag.findAll({
     include: {
       model: Product,
-      attributes: ["product_id", "product_name", "price", "stock", "category_id"],
+      attributes: [
+        "product_id",
+        "product_name",
+        "price",
+        "stock",
+        "category_id",
+      ],
     },
   }).catch((err) => {
     res.json(err);
@@ -34,13 +40,18 @@ router.get("/:id", async (req, res) => {
   // find a single tag by its `id`
   // be sure to include its associated Product data
   try {
-    const id = await Product.findByPk(req.params.id, {
-      include: [
-        { model: tag },
-        { model: product },
-        { model: category },
-        { model: product_tag },
-      ],
+    const id = await Tag.findOne({
+      where: { tag_id: req.params.id },
+      include: {
+        model: Product,
+        attributes: [
+          "product_id",
+          "product_name",
+          "price",
+          "stock",
+          "category_id",
+        ],
+      },
     });
     res.status(200).json(id);
   } catch (err) {
