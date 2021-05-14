@@ -63,8 +63,8 @@ router.post("/", async (req, res) => {
   // create a new tag
   /* req.body should look like this...
     {
-      "tag_id": 11,
-      "tag_name": "House Music"
+      "tag_id": 9,
+      "tag_name": "house music"
     }
   */
   try {
@@ -79,8 +79,8 @@ router.put("/:id", async (req, res) => {
   // update a tag's name by its `id` value
   /* put should look like this:
     {
-      "tag_id": 2,
-      "tag_name": "Country_music"
+      "tag_id": 9,
+      "tag_name": "country_music"
     }
   */
   try {
