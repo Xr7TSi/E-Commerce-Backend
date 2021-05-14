@@ -38,9 +38,10 @@ router.post("/", (req, res) => {
       "product_name": "Basketball",
       "price": 200.00,
       "stock": 3,
-      "tagIds": [1, 2, 3, 4]
+      "category_id": [2]
     }
   */
+ console.log(req.body)
   Product.create(req.body)
     .then((product) => {
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
@@ -66,7 +67,7 @@ router.post("/", (req, res) => {
 // update product
 router.put("/:id", (req, res) => {
   // update product data
-   /* req.body should look like this...
+   /* put should look like this...
    {
       "product_name": "Plain T-Shirt",
       "price": 16.00,
